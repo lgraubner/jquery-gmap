@@ -7,7 +7,7 @@
 ## Usage
 
 ```HTML
-<div id="gmap" data-gmap-options='{"zoom":8}' data-gmap-coords="52.5075419,13.4251364"></div>
+<div id="map" data-gmap-options='{"zoom":8}' data-gmap-coords="52.5075419,13.4251364"></div>
 ```
 
 ```JavaScript
