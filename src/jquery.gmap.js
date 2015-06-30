@@ -2,7 +2,7 @@
  * jQuery Wrapper for Google Maps API v3.
  *
  * @author Lars Graubner <mail@larsgraubner.de>
- * @version 1.0.1
+ * @version 1.1.1
  * @license MIT
  */
 ;(function($) {
@@ -83,17 +83,18 @@
         init: function(opts) {
             $el = $(this);
 
-            var htmlData = $el.data();
-
-            for (var p in htmlData) {
-                if (htmlData.hasOwnProperty(p) && /^gmap[A-Z]+/.test(p)) {
-                    var shortName = p[4].toLowerCase() + p.substr(5);
-                    htmlData[shortName] = htmlData[p];
-                }
-            }
-
             if ($el.length > 0) {
+                var htmlData = $el.data();
+
+                for (var p in htmlData) {
+                    if (htmlData.hasOwnProperty(p) && /^gmap[A-Z]+/.test(p)) {
+                        var shortName = p[4].toLowerCase() + p.substr(5);
+                        htmlData[shortName] = htmlData[p];
+                    }
+                }
+
                 data = $.extend(true, {}, $.fn.gmap.defaults, htmlData, opts);
+                $el.data("gmap.opts", data);
 
                 _initMap();
 
