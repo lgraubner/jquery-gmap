@@ -2,7 +2,7 @@
  * jQuery Wrapper for Google Maps API v3.
  *
  * @author Lars Graubner <mail@larsgraubner.de>
- * @version 1.0.0
+ * @version 1.0.1
  * @license MIT
  */
 ;(function($) {
@@ -87,7 +87,7 @@
 
             for (var p in htmlData) {
                 if (htmlData.hasOwnProperty(p) && /^gmap[A-Z]+/.test(p)) {
-                    var shortName = p[5].toLowerCase() + p.substr(6);
+                    var shortName = p[4].toLowerCase() + p.substr(5);
                     htmlData[shortName] = htmlData[p];
                 }
             }
