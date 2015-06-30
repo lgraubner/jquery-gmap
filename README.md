@@ -15,9 +15,11 @@ $("#map").gmap({
     options: {
         disableDefaultUI: true
     },
-    markers: {
-        coords: "52.5075419,13.4251364",
-        info: "This is an info popup"
-    }
+    markers: [
+        {
+            coords: "52.5075419,13.4251364",
+            info: "This is an info popup"
+        }
+    ]
 });
 ```
