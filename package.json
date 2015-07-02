@@ -2,7 +2,7 @@
   "name": "gmap",
   "description": "jQuery Wrapper for Google Maps API v3.",
   "version": "1.2.1",
-  "homepage": "https://github.com/lgraubner/gmap",
+  "homepage": "https://github.com/lgraubner/jquery-gmap",
   "license": "MIT",
   "devDependencies": {
     "gulp": "~3.9.0",
@@ -15,15 +15,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lgraubner/gmap.git"
+    "url": "https://github.com/lgraubner/jquery-gmap.git"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "dependencies": {
     "jquery": ">=1.7"
-  },
-  "scripts": {
-    "build": "gulp build"
   }
 }
