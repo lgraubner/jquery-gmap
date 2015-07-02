@@ -81,11 +81,11 @@
 
              this.map = new google.maps.Map(this.$el.get(0), options);
 
-             google.maps.event.addDomListener(window, 'resize', function() {
-                 var center = map.getCenter();
+             google.maps.event.addDomListener(window, 'resize', $.proxy(function() {
+                 var center = this.map.getCenter();
                  google.maps.event.trigger(this.map, 'resize');
                  this.map.setCenter(center);
-             });
+             }, this));
          },
 
          getMap: function() {
