@@ -2,30 +2,13 @@
  * jQuery Wrapper for Google Maps API v3.
  *
  * @author Lars Graubner <mail@larsgraubner.de>
- * @version 1.1.1
+ * @version 1.2.1
  * @license MIT
  */
  ;(function(window, document, $, undefined) {
      "use strict";
 
      var pluginName = "gmap";
-
-     var _debounce = function(func, wait, immediate) {
-         var timeout;
-         return function() {
-             var context = this, args = arguments;
-             var later = function() {
-                 timeout = null;
-                 if (!immediate)
-                     func.apply(context, args);
-             };
-             var callNow = immediate && !timeout;
-             clearTimeout(timeout);
-             timeout = setTimeout(later, wait);
-             if (callNow)
-                 func.apply(context, args);
-         };
-     };
 
      function Plugin(element, options) {
          this.$el = $(element);
