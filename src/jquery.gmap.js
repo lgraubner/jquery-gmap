@@ -5,133 +5,139 @@
  * @version 1.1.1
  * @license MIT
  */
-;(function($) {
-    "use strict";
+ ;(function(window, document, $, undefined) {
+     "use strict";
 
-    var $el, data, map;
+     var pluginName = "gmap";
 
-    /**
-     * Initializes all markers if specified.
-     */
-    var _initMarker = function() {
-        var m, infowindow, coords;
-        $.each(data.marker, function(key, marker) {
-            coords = marker.coords.split(",");
-            m = new google.maps.Marker({
-                position : new google.maps.LatLng(coords[0], coords[1]),
-                icon : (marker.icon ? new google.maps.MarkerImage(marker.icon) : null),
-                title : marker.title,
-                map : map
-            });
+     var _debounce = function(func, wait, immediate) {
+         var timeout;
+         return function() {
+             var context = this, args = arguments;
+             var later = function() {
+                 timeout = null;
+                 if (!immediate)
+                     func.apply(context, args);
+             };
+             var callNow = immediate && !timeout;
+             clearTimeout(timeout);
+             timeout = setTimeout(later, wait);
+             if (callNow)
+                 func.apply(context, args);
+         };
+     };
 
-            if (marker.info) {
-                infowindow = new google.maps.InfoWindow({
-                    content: marker.info.content
-                });
+     function Plugin(element, options) {
+         this.$el = $(element);
+         var data = this.$el.data();
 
-                google.maps.event.addListener(m, 'click', function() {
-                    infowindow.open(map, m);
-                });
+         for (var p in data) {
+             if (data.hasOwnProperty(p) && /^gmap[A-Z]+/.test(p)) {
+                 var shortName = p[pluginName.length].toLowerCase() + p.substr(pluginName.length + 1);
+                 data[shortName] = data[p];
+             }
+         }
 
-                if (marker.info.show) {
-                    infowindow.open(map, m);
-                }
-            }
-        });
-    };
+         this.settings = $.extend(true, {}, $.fn[pluginName].defaults, options, data);
 
-    /**
-     * Initializes map.
-     */
-    var _initMap = function() {
-        var coords = data.coords.split(","),
-            options = $.extend({
-                center: new google.maps.LatLng(parseFloat(coords[0]), parseFloat(coords[1]))
-            }, data.options);
+         this._name = pluginName;
+         this.init();
+     }
 
-        map = new google.maps.Map($el.get(0), options);
+     $.extend(Plugin.prototype, {
 
-        google.maps.event.addDomListener(window, 'resize', function() {
-            var center = map.getCenter();
-            google.maps.event.trigger(map, 'resize');
-            map.setCenter(center);
-        });
-    };
+         _initMarker: function() {
+             var m, infowindow, coords;
+             $.each(this.settings.marker, $.proxy(function(key, marker) {
+                 coords = marker.coords.split(",");
+                 m = new google.maps.Marker({
+                     position: new google.maps.LatLng(coords[0], coords[1]),
+                     icon: (marker.icon ? new google.maps.MarkerImage(marker.icon) : null),
+                     title: marker.title,
+                     map: this.map
+                 });
 
-    /**
-     * Wrapper Object
-     * @type {Object}
-     */
-    var gmap = {
+                 if (marker.info) {
+                     infowindow = new google.maps.InfoWindow({
+                         content: marker.info.content
+                     });
 
-        /**
-         * Returns raw Google Map object.
-         *
-         * @return {Map}    Google Map
-         */
-        getMap: function() {
-            return map;
-        },
+                     google.maps.event.addListener(m, 'click', function() {
+                         infowindow.open(this.map, m);
+                     });
 
-        /**
-         * Initialize function for setting styles, options and variables.
-         *
-         * @param  {Object} options custom options to use
-         *
-         * @return  {Object}    jQuery element object
-         */
-        init: function(opts) {
-            $el = $(this);
+                     if (marker.info.show) {
+                         infowindow.open(this.map, m);
+                     }
+                 }
+             }, this));
+         },
 
-            if ($el.length > 0) {
-                var htmlData = $el.data();
+         _initMap: function() {
+             var coords = this.settings.coords.split(","),
+                 options = $.extend({
+                     center: new google.maps.LatLng(parseFloat(coords[0]), parseFloat(coords[1]))
+                 }, this.settings.options);
 
-                for (var p in htmlData) {
-                    if (htmlData.hasOwnProperty(p) && /^gmap[A-Z]+/.test(p)) {
-                        var shortName = p[4].toLowerCase() + p.substr(5);
-                        htmlData[shortName] = htmlData[p];
-                    }
-                }
+             this.map = new google.maps.Map(this.$el.get(0), options);
 
-                data = $.extend(true, {}, $.fn.gmap.defaults, htmlData, opts);
-                $el.data("gmap.opts", data);
+             google.maps.event.addDomListener(window, 'resize', function() {
+                 var center = map.getCenter();
+                 google.maps.event.trigger(this.map, 'resize');
+                 this.map.setCenter(center);
+             });
+         },
 
-                _initMap();
+         getMap: function() {
+            return this.map;
+         },
 
-                if (data.marker) {
-                    _initMarker();
-                }
-            }
+         init: function() {
+             this._initMap();
 
-            return $el;
-        }
-    };
+             if (this.settings.marker) {
+                 this._initMarker();
+             }
+         }
+     });
 
-    /**
-     * Extend jQuery with function.
-     */
-    $.fn.gmap = function(arg) {
-        if (gmap[arg]) {
-            return gmap[arg].apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (typeof arg === 'object' || !arg) {
-            return gmap.init.apply(this, arguments);
-        } else {
-            $.error('Method ' + arg + ' does not exist on jquery.gmap');
-        }
-    };
+     $.fn[pluginName] = function(options) {
+         var args = arguments;
 
-    /**
-     * Set defaults.
-     */
-    $.fn.gmap.defaults = {
-        options: {
-            draggable: true,
-            scrollwheel: true,
-            disableDefaultUI: false,
-            disableDoubleClickZoom: false,
-            mapTypeControl: false,
-            zoom: 11
-        }
-    };
+         if (options === undefined || typeof options === "object") {
+             return this.each(function() {
+                 if (!$.data(this, "plugin_" + pluginName)) {
+                     $.data(this, "plugin_" + pluginName, new Plugin(this, options));
+                 }
+             });
+         } else if (typeof options === "string" && options[0] !== "_" && options !== "init") {
+             var returns;
 
-})(jQuery);
+             this.each(function() {
+                 var instance = $.data(this, "plugin_" + pluginName);
+
+                 if (instance instanceof Plugin && typeof instance[options] === "function") {
+                     returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
+                 }
+
+                 if (options === "destroy") {
+                 	$.data(this, 'plugin_' + pluginName, null);
+                 }
+             });
+
+             return returns !== undefined ? returns : this;
+         }
+
+     };
+
+     $.fn[pluginName].defaults = {
+         options: {
+             draggable: true,
+             scrollwheel: true,
+             disableDefaultUI: false,
+             disableDoubleClickZoom: false,
+             mapTypeControl: false,
+             zoom: 11
+         }
+     };
+ })(window, document, jQuery);

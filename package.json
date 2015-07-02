@@ -1,7 +1,7 @@
 {
   "name": "gmap",
   "description": "jQuery Wrapper for Google Maps API v3.",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "homepage": "https://github.com/lgraubner/gmap",
   "license": "MIT",
   "devDependencies": {
