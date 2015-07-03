@@ -7,7 +7,7 @@
  */
  ;(function(window, document, $, undefined) {
      "use strict";
-
+     
      var pluginName = "gmap";
 
      function Plugin(element, options) {
