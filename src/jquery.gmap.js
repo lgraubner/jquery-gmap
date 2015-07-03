@@ -7,9 +7,15 @@
  */
  ;(function(window, document, $, undefined) {
      "use strict";
-     
+
      var pluginName = "gmap";
 
+     /**
+      * Plugin constructor.
+      *
+      * @param {Object} element element to use
+      * @param {Object} options options to use
+      */
      function Plugin(element, options) {
          this.$el = $(element);
          var data = this.$el.data();
@@ -27,8 +33,13 @@
          this.init();
      }
 
+     /**
+      * Extend prototype with functions.
+      */
      $.extend(Plugin.prototype, {
-
+         /**
+          * Init all markers passed in options Object.
+          */
          _initMarker: function() {
              var m, infowindow, coords;
              $.each(this.settings.marker, $.proxy(function(key, marker) {
@@ -56,6 +67,9 @@
              }, this));
          },
 
+         /**
+          * Initialize Google Map and add listener for resize.
+          */
          _initMap: function() {
              var coords = this.settings.coords.split(","),
                  options = $.extend({
@@ -71,10 +85,17 @@
              }, this));
          },
 
+         /**
+          * Return raw Google Map Object.
+          * @return {Map}   Google Map object
+          */
          getMap: function() {
             return this.map;
          },
 
+         /**
+          * Init function.
+          */
          init: function() {
              this._initMap();
 
@@ -84,6 +105,9 @@
          }
      });
 
+     /**
+      * Extend jQuery object with the new plugin.
+      */
      $.fn[pluginName] = function(options) {
          var args = arguments;
 
@@ -113,6 +137,11 @@
 
      };
 
+     /**
+      * Set plugin defaults.
+      * 
+      * @type {Object}
+      */
      $.fn[pluginName].defaults = {
          options: {
              draggable: true,
