@@ -1,6 +1,6 @@
 {
   "name": "jquery-gmap",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "jQuery Wrapper for Google Maps API v3.",
   "author": "Lars Graubner <mail@larsgraubner.de>",
   "homepage": "https://github.com/lgraubner/jquery-gmap",
