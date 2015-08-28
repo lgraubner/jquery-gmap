@@ -2,7 +2,7 @@
  * jQuery Wrapper for Google Maps API v3.
  *
  * @author Lars Graubner <mail@larsgraubner.de>
- * @version 1.2.3
+ * @version 1.3.0
  * @license MIT
  */
 ;(function(window, document, $, undefined) {
@@ -55,9 +55,13 @@
                         content: marker.info.content
                     });
 
-                    google.maps.event.addListener(m, 'click', function() {
+                    google.maps.event.addListener(m, 'click', $.proxy(function() {
+                        if (this._currInfoWindow !== undefined) {
+                            this._currInfoWindow.close();
+                        }
                         infowindow.open(this.map, m);
-                    });
+                        this._currInfoWindow = infowindow;
+                    }, this));
 
                     if (marker.info.show) {
                         infowindow.open(this.map, m);
