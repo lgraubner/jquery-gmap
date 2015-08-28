@@ -2,7 +2,7 @@
  * jQuery Wrapper for Google Maps API v3.
  *
  * @author Lars Graubner <mail@larsgraubner.de>
- * @version 1.2.2
+ * @version 1.2.3
  * @license MIT
  */
 ;(function(window, document, $, undefined) {
@@ -41,13 +41,9 @@
          * Init all markers passed in options Object.
          */
         _initMarker: function() {
-            var m;
-            var infowindow;
-            var coords;
-
             $.each(this.settings.marker, $.proxy(function(key, marker) {
-                coords = marker.coords.split(",");
-                m = new google.maps.Marker({
+                var coords = marker.coords.split(",");
+                var m = new google.maps.Marker({
                     position: new google.maps.LatLng(coords[0], coords[1]),
                     icon: (marker.icon ? new google.maps.MarkerImage(marker.icon) : null),
                     title: marker.title,
@@ -55,7 +51,7 @@
                 });
 
                 if (marker.info) {
-                    infowindow = new google.maps.InfoWindow({
+                    var infowindow = new google.maps.InfoWindow({
                         content: marker.info.content
                     });
 
