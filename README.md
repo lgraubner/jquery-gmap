@@ -74,3 +74,14 @@ You can also specify options inline. These options will override any other optio
 ```JavaScript
 $("#map").gmap();
 ```
+
+Not all features of Google Maps API v3 are covered by `jquery.gmap`. Therefore you can get the raw `Map` object and work with it as normal.
+
+```JavaScript
+var $gmap = $("#map").gmap({
+    ...
+});
+
+var map = $gmap.getMap();
+// do whatever you like
+```
