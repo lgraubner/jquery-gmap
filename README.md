@@ -1,4 +1,4 @@
-# jQuery.gmap Plugin
+# jQuery.gmap
 
 > Stop wasting your time typing Google Maps API code. Be more efficient.
 
@@ -65,7 +65,7 @@ google.maps.event.addListener(marker, 'click', function() {
 infowindow.open(map, marker);
 ```
 
-You can also specify options inline. These options will override any other options! You still have to initialize the map.
+You can also specify options inline which will overwrite the default value and the value specified on initialization. You still have to initialize the map.
 
 ```HTML
 <div id="map" data-gmap-options='{"zoom":8}' data-gmap-coords="52.5075419,13.4251364" data-gmap-marker='[{"coords":"52.5075419,13.4251364"}]'></div>
