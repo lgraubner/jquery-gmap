@@ -1,5 +1,7 @@
 # jQuery.gmap
 
+![David Dev](https://img.shields.io/david/dev/lgraubner/jquery-gmap.svg)](https://david-dm.org/lgraubner/jquery-gmap#info=devDependencies)
+
 > Stop wasting your time typing Google Maps API code. Be more efficient.
 
 To display a neat Google Map you have to write the same basic code every time. This plugin helps to create Google Maps with less code.
