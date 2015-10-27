@@ -1,6 +1,6 @@
 # jQuery.gmap
 
-![David Dev](https://img.shields.io/david/dev/lgraubner/jquery-gmap.svg)](https://david-dm.org/lgraubner/jquery-gmap#info=devDependencies)
+[![David Dev](https://img.shields.io/david/dev/lgraubner/jquery-gmap.svg)](https://david-dm.org/lgraubner/jquery-gmap#info=devDependencies)
 
 > Stop wasting your time typing Google Maps API code. Be more efficient.
 
