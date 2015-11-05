@@ -2,7 +2,7 @@
  * jQuery Wrapper for Google Maps API v3.
  *
  * @author Lars Graubner <mail@larsgraubner.de>
- * @version 1.3.0
+ * @version 1.4.0
  * @license MIT
  */
 ;(function(window, document, $, undefined) {
@@ -90,7 +90,37 @@
         },
 
         /**
+         * Wrapper for setCenter function.
+         *
+         * @param  {String} comma seperated latlng     Map coordinates to set as map center
+         */
+        setCenter: function(coords) {
+            var c = coords.split(",");
+            var latlng = new google.maps.LatLng(parseFloat(c[0]), parseFloat(c[1]));
+            this.map.setCenter(latlng);
+        },
+
+        /**
+         * Wrapper for setOptions function.
+         *
+         * @param  {Object} options     options to be changed
+         */
+        setOptions: function(options) {
+            this.map.setOptions(options);
+        },
+
+        /**
+         * Wrapper for setZoom function.
+         *
+         * @param  {Object} options     options to be changed
+         */
+        setZoom: function(zoom) {
+            this.map.setZoom(zoom);
+        },
+
+        /**
          * Return raw Google Map Object.
+         *
          * @return {Map}   Google Map object
          */
         getMap: function() {

@@ -77,7 +77,40 @@ You can also specify options inline which will overwrite the default value and t
 $("#map").gmap();
 ```
 
-Not all features of Google Maps API v3 are covered by `jquery.gmap`. Therefore you can get the raw `Map` object and work with it as normal.
+## API
+
+jQuery.gmap offers several methods which are wrappers for common Google Map API functions.
+
+### setCenter
+
+Sets the center of an initialized map. expects a LatLng string, which will be converted automatically.
+
+```JavaScript
+$("#map").gmap("setCenter", "53.5584898,9.7873965");
+```
+
+### setOptions
+
+Set options after initialization.
+
+```JavaScript
+$("#map").gmap("setOptions", {
+    scrollwheel: false,
+    draggable: true
+});
+```
+
+### setZoom
+
+Set zoom value of your map.
+
+```JavaScript
+$("#map").gmap("setZoom", 6);
+```
+
+### getMap
+
+Not all features of Google Maps API v3 are covered by jquery.gmap. Therefore you can get the raw `Map` object and work with it as normal.
 
 ```JavaScript
 var $gmap = $("#map").gmap({
@@ -86,4 +119,5 @@ var $gmap = $("#map").gmap({
 
 var map = $gmap.getMap();
 // do whatever you like
+var id = map.getDiv();
 ```
