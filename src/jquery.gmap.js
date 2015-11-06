@@ -2,7 +2,7 @@
  * jQuery Wrapper for Google Maps API v3.
  *
  * @author Lars Graubner <mail@larsgraubner.de>
- * @version 1.4.0
+ * @version 1.5.0
  * @license MIT
  */
 ;(function(window, document, $, undefined) {
@@ -90,6 +90,24 @@
         },
 
         /**
+         * Proxies map events to listen for them the jquery way.
+         */
+        _addEventHandlers: function() {
+            var handlers = ["bounds_changed", "center_changed", "click", "dblclick", "drag", "dragend", "dragstart", "heading_changed", "idle", "maptypeid_changed", "mousemove", "mouseout", "mouseover", "projection_changed", "resize", "rightclick", "tilesloaded", "tilt_changed", "zoom_changed"];
+
+            function attachHandler(map, $el, handler) {
+                map.addListener(handler, function() {
+                    $el.trigger(handler + ".gmap");
+                });
+            }
+
+            var i;
+            for (i = 0; i < handlers.length; i++) {
+                attachHandler(this.map, this.$el, handlers[i]);
+            }
+        },
+
+        /**
          * Wrapper for setCenter function.
          *
          * @param  {String} comma seperated latlng     Map coordinates to set as map center
@@ -132,6 +150,7 @@
          */
         init: function() {
             this._initMap();
+            this._addEventHandlers();
 
             if (this.settings.marker) {
                 this._initMarker();

@@ -121,3 +121,18 @@ var map = $gmap.getMap();
 // do whatever you like
 var id = map.getDiv();
 ```
+
+## Events
+
+All Google Map events are proxied by jQuery.gmap to access them easier the jQuery way. For reference check the [Google Maps documentation](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Map).
+
+```JavaScript
+var $gmap = $("#map").gmap({
+    ...
+});
+
+$gmap.on("tilesloaded.gmap", function() {
+    // tiles loaded!
+});
+
+```
