@@ -3,9 +3,9 @@
   "version": "1.5.0",
   "description": "jQuery Wrapper for Google Maps API v3.",
   "author": {
-      "name": "Lars Graubner",
-      "email": "mail@larsgraubner.de",
-      "url": "http://larsgraubner.de"
+    "name": "Lars Graubner",
+    "email": "mail@larsgraubner.de",
+    "url": "http://larsgraubner.de"
   },
   "homepage": "https://github.com/lgraubner/jquery-gmap",
   "main": "dist/jquery.gmap.min.js",
@@ -14,19 +14,20 @@
     "url": "https://github.com/lgraubner/jquery-gmap.git"
   },
   "bugs": {
-      "url": "https://github.com/lgraubner/jquery-gmap/issues"
+    "url": "https://github.com/lgraubner/jquery-gmap/issues"
   },
   "dependencies": {
     "jquery": ">=1.9.0"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
-    "gulp-uglify": "^1.4.2",
     "gulp-header": "^1.7.1",
+    "gulp-jshint": "^2.0.0",
     "gulp-rename": "^1.2.2",
-    "gulp-strip-debug": "^1.0.2",
-    "gulp-jshint": "^1.12.0",
-    "jshint-stylish": "^2.0.1"
+    "gulp-strip-debug": "^1.1.0",
+    "gulp-uglify": "^1.5.1",
+    "jshint": "^2.9.1-rc1",
+    "jshint-stylish": "^2.1.0"
   },
   "license": "MIT"
 }
