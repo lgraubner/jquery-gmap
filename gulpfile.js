@@ -15,7 +15,7 @@ var banner = ["/**",
     " */",
 ""].join("\n");
 
-gulp.task("build", function() {
+gulp.task("build", ["lint"], function() {
     return gulp.src("src/" + pluginName + ".js")
         .pipe(stripDebug())
         .pipe(uglify())
@@ -30,4 +30,4 @@ gulp.task("lint", function() {
         .pipe(jshint.reporter("jshint-stylish"));
 });
 
-gulp.task("default", ["lint", "build"]);
+gulp.task("default", ["build"]);
