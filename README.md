@@ -14,6 +14,11 @@ As this is a jQuery plugin it depends on the jQuery library and of course the Go
 
 Include the Google Maps API v3 and `jquery.gmap.min.js` somewhere on your site, preferably before the closing `body` tag.
 
+```HTML
+<script src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places" type="text/javascript"></script>
+<script src="path/to/jquery.gmap.min.js"></script>
+```
+
 Create an element:
 ```HTML
 <div id="map"></div>
@@ -35,6 +40,12 @@ $("#map").gmap({
                 content: "This is an info popup",
                 show: true
             }
+        }
+    ],
+    // add marker for places and retrieve place info
+    places: [
+        {
+            placeId: "PLACE_ID"
         }
     ]
 });
@@ -121,6 +132,14 @@ var map = $gmap.getMap();
 // do whatever you like
 var id = map.getDiv();
 ```
+
+### getMarker
+
+Get all initialized marker objects.
+
+### getPlaces
+
+Get all initialized places including the retrieved data.
 
 ## Events
 

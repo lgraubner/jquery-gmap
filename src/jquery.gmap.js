@@ -2,7 +2,7 @@
  * jQuery Wrapper for Google Maps API v3.
  *
  * @author Lars Graubner <mail@larsgraubner.de>
- * @version 1.5.0
+ * @version 1.6.0
  * @license MIT
  */
 ;(function(window, document, $, undefined) {
@@ -37,6 +37,30 @@
      * Extend prototype with functions.
      */
     $.extend(Plugin.prototype, {
+
+        /**
+         * Init all places passed in options Object.
+         */
+        _initPlaces: function() {
+            $.each(this.settings.places, $.proxy(function(key, place) {
+                var service = new google.maps.places.PlacesService(this.map);
+                service.getDetails({ placeId: place.placeId }, $.proxy(function(p, status) {
+                    var m = new google.maps.Marker({
+                        map: this.map,
+                        icon: place.icon,
+                        title: p.name,
+                        place: {
+                            placeId: p.place_id,
+                            location: p.geometry.location
+                        }
+                    });
+
+                    this.places.push(p);
+                    this.marker.push(m);
+                }, this));
+            }, this));
+        },
+
         /**
          * Init all markers passed in options Object.
          */
@@ -67,6 +91,8 @@
                         infowindow.open(this.map, m);
                     }
                 }
+
+                this.marker.push(m);
             }, this));
         },
 
@@ -146,14 +172,39 @@
         },
 
         /**
+         * Return all marker.
+         *
+         * @return {Array}  Array of marker.
+         */
+        getMarker: function() {
+            return this.places;
+        },
+
+        /**
+         * Return all places with retrieved data.
+         *
+         * @return {Array}  Array of places.
+         */
+        getPlaces: function() {
+            return this.places;
+        },
+
+        /**
          * Init function.
          */
         init: function() {
+            this.marker = [];
+            this.places = [];
+
             this._initMap();
             this._addEventHandlers();
 
             if (this.settings.marker) {
                 this._initMarker();
+            }
+
+            if (this.settings.places) {
+                this._initPlaces();
             }
         }
     });
