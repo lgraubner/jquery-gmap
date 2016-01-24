@@ -2,7 +2,7 @@
  * jQuery Wrapper for Google Maps API v3.
  *
  * @author Lars Graubner <mail@larsgraubner.de>
- * @version 1.6.0
+ * @version 2.0.0
  * @license MIT
  */
 (function (window, document, $) {
@@ -22,6 +22,7 @@
     var shortName;
 
     this.$el = $(element);
+    this.mapElement = this.$el.get(0);
 
     for (p in data) {
       if (data.hasOwnProperty(p) && /^gmap[A-Z]+/.test(p)) {
@@ -42,113 +43,47 @@
   $.extend(Plugin.prototype, {
 
     /**
-     * Init all places passed in options Object.
-     */
-    _initPlaces: function () {
-      $.each(this.settings.places, $.proxy(function (key, place) {
-        var service = new google.maps.places.PlacesService(this.map);
-        service.getDetails({ placeId: place.placeId }, $.proxy(function (p) {
-          var m = new google.maps.Marker({
-            map: this.map,
-            icon: place.icon,
-            title: p.name,
-            place: {
-              placeId: p.place_id,
-              location: p.geometry.location,
-            },
-          });
-
-          this.places.push(p);
-          this.marker.push(m);
-        }, this));
-      }, this));
-    },
-
-    /**
-     * Init all markers passed in options Object.
-     */
-    _initMarker: function () {
-      var infowindow;
-      $.each(this.settings.marker, $.proxy(function (key, marker) {
-        var coords = marker.coords.split(',');
-        var m = new google.maps.Marker({
-          position: new google.maps.LatLng(coords[0], coords[1]),
-          icon: (marker.icon ? new google.maps.MarkerImage(marker.icon) : null),
-          title: marker.title,
-          map: this.map,
-        });
-
-        if (marker.info) {
-          infowindow = new google.maps.InfoWindow({
-            content: marker.info.content,
-          });
-
-          google.maps.event.addListener(m, 'click', $.proxy(function () {
-            if (this._currInfoWindow !== undefined) {
-              this._currInfoWindow.close();
-            }
-            infowindow.open(this.map, m);
-            this._currInfoWindow = infowindow;
-          }, this));
-
-          if (marker.info.show) {
-            infowindow.open(this.map, m);
-          }
-        }
-
-        this.marker.push(m);
-      }, this));
-    },
-
-    /**
-     * Initialize Google Map and add listener for resize.
-     */
-    _initMap: function () {
-      var options = $.extend({
-        center: new google.maps.LatLng(this.settings.lat, this.settings.lng),
-      }, this.settings.options);
-
-      this.map = new google.maps.Map(this.$el.get(0), options);
-
-      if (this.settings.centerOnResize) {
-        google.maps.event.addDomListener(this.map, 'resize', $.proxy(function () {
-          var center = this.map.getCenter();
-          this.map.setCenter(center);
-        }, this));
-      }
-    },
-
-    /**
-     * Proxies map events to listen for them the jquery way.
-     */
-    _addEventHandlers: function () {
-      var handlers = ['bounds_changed', 'center_changed', 'click', 'dblclick',
-        'drag', 'dragend', 'dragstart', 'heading_changed', 'idle',
-          'maptypeid_changed', 'mousemove', 'mouseout', 'mouseover',
-          'projection_changed', 'resize', 'rightclick', 'tilesloaded',
-          'tilt_changed', 'zoom_changed'];
-      var i;
-
-      function attachHandler(map, $el, handler) {
-        map.addListener(handler, function () {
-          $el.trigger(handler + '.gmap');
-        });
-      }
-
-      for (i = 0; i < handlers.length; i++) {
-        attachHandler(this.map, this.$el, handlers[i]);
-      }
-    },
-
-    /**
-     * Wrapper for setCenter function.
+     * Add a marker to the map.
      *
-     * @param  {String} comma seperated latlng   Map coordinates to set as map center
+     * @param {Object} markerOptions  Options
      */
-    setCenter: function (coords) {
-      var c = coords.split(',');
-      var latlng = new google.maps.LatLng(parseFloat(c[0]), parseFloat(c[1]));
-      this.map.setCenter(latlng);
+    addMarker: function (markerOptions) {
+      var infowindow;
+      var m = new google.maps.Marker({
+        position: new google.maps.LatLng(markerOptions.lat, markerOptions.lng),
+        icon: (markerOptions.icon ? new google.maps.MarkerImage(markerOptions.icon) : null),
+        title: markerOptions.title,
+        map: this.map,
+      });
+
+      if (markerOptions.infoWindow) {
+        infowindow = new google.maps.InfoWindow({
+          content: markerOptions.infoWindow.content,
+        });
+
+        google.maps.event.addListener(m, 'click', $.proxy(function () {
+          if (this._currInfoWindow !== undefined && this.settings.singleInfoWindow) {
+            this._currInfoWindow.close();
+          }
+          infowindow.open(this.map, m);
+          this._currInfoWindow = infowindow;
+        }, this));
+
+        if (markerOptions.infoWindow.show) {
+          infowindow.open(this.map, m);
+        }
+      }
+
+      this.marker.push(m);
+    },
+
+    /**
+     * Removes given Marker.
+     *
+     * @param  {Marker} marker
+     */
+    removeMarker: function (marker) {
+      marker.setMap(null);
     },
 
     /**
@@ -158,15 +93,6 @@
      */
     setOptions: function (options) {
       this.map.setOptions(options);
-    },
-
-    /**
-     * Wrapper for setZoom function.
-     *
-     * @param  {Object} options   options to be changed
-     */
-    setZoom: function (zoom) {
-      this.map.setZoom(zoom);
     },
 
     /**
@@ -184,34 +110,25 @@
      * @return {Array}  Array of marker.
      */
     getMarker: function () {
-      return this.places;
-    },
-
-    /**
-     * Return all places with retrieved data.
-     *
-     * @return {Array}  Array of places.
-     */
-    getPlaces: function () {
-      return this.places;
+      return this.marker;
     },
 
     /**
      * Init function.
      */
     init: function () {
+      var options = $.extend({
+        center: new google.maps.LatLng(this.settings.lat, this.settings.lng),
+      }, this.settings.options);
+
       this.marker = [];
-      this.places = [];
+      this.map = new google.maps.Map(this.mapElement, options);
 
-      this._initMap();
-      this._addEventHandlers();
-
-      if (this.settings.marker) {
-        this._initMarker();
-      }
-
-      if (this.settings.places) {
-        this._initPlaces();
+      if (this.settings.centerOnResize) {
+        google.maps.event.addDomListener(this.mapElement, 'resize', $.proxy(function () {
+          var center = this.map.getCenter();
+          this.map.setCenter(center);
+        }, this));
       }
     },
   });
@@ -253,6 +170,7 @@
    */
   $.fn[pluginName].defaults = {
     centerOnResize: true,
+    singleInfoWindow: true,
     options: {
       draggable: true,
       scrollwheel: true,
