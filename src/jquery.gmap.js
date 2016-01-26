@@ -125,8 +125,9 @@
       this.map = new google.maps.Map(this.mapElement, options);
 
       if (this.settings.centerOnResize) {
-        google.maps.event.addDomListener(this.mapElement, 'resize', $.proxy(function () {
+        google.maps.event.addDomListener(window, 'resize', $.proxy(function () {
           var center = this.map.getCenter();
+          google.maps.event.trigger(this.map, 'resize');
           this.map.setCenter(center);
         }, this));
       }
