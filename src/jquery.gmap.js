@@ -69,7 +69,7 @@
           this._currInfoWindow = infowindow;
         }, this));
 
-        if (markerOptions.infoWindow.show) {
+        if (markerOptions.infoWindow.opened) {
           infowindow.open(this.map, m);
         }
       }

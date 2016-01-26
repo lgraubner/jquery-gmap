@@ -25,29 +25,25 @@ Create an element:
 ```
 
 Initialize your map:
+
 ```JavaScript
-$("#map").gmap({
-    coords: "52.5075419,13.4251364",
-    options: {
-        disableDefaultUI: true,
-        zoom: 13
-    },
-    marker: [
-        {
-            coords: "52.5075419,13.4251364",
-            title: "I am the title",
-            info: {
-                content: "This is an info popup",
-                show: true
-            }
-        }
-    ],
-    // add marker for places and retrieve place info
-    places: [
-        {
-            placeId: "PLACE_ID"
-        }
-    ]
+var $map = $('#map').gmap({
+  lat: 52.5075419,
+  lng: 13.4251364,
+  options: {
+    disableDefaultUI: true,
+    zoom: 13
+  }
+});
+
+$map.gmap('addMarker', {
+  lat: 52.5075419,
+  lng: 13.4251364,
+  title: 'I am the title'
+  infoWindow: {
+    content: 'This is an info popup',
+    opened: true
+  }
 });
 ```
 
@@ -55,24 +51,24 @@ The same map code *without* `jquery.gmap` would look like this:
 
 ```JavaScript
 var options = {
-    disableDefaultUI: true,
-    zoom: 13,
-    center: new google.maps.LatLng(52.5075419, 13.4251364)
+  disableDefaultUI: true,
+  zoom: 13,
+  center: new google.maps.LatLng(52.5075419, 13.4251364)
 }
-var map = new google.maps.Map(document.getElementById("map"), options);
+var map = new google.maps.Map(document.getElementById('map'), options);
 
 var marker = new google.maps.Marker({
-    position: new google.maps.LatLng(52.5075419, 13.4251364),
-    title: "I am the title",
-    map: map
+  position: new google.maps.LatLng(52.5075419, 13.4251364),
+  title: 'I am the title',
+  map: map
 });
 
 var infowindow = new google.maps.InfoWindow({
-    content: "This is an info popup"
+  content: 'This is an info popup'
 });
 
 google.maps.event.addListener(marker, 'click', function() {
-    infowindow.open(map, marker);
+  infowindow.open(map, marker);
 });
 
 infowindow.open(map, marker);
@@ -81,42 +77,60 @@ infowindow.open(map, marker);
 You can also specify options inline which will overwrite the default value and the value specified on initialization. You still have to initialize the map.
 
 ```HTML
-<div id="map" data-gmap-options='{"zoom":8}' data-gmap-coords="52.5075419,13.4251364" data-gmap-marker='[{"coords":"52.5075419,13.4251364"}]'></div>
+<div id="map" data-gmap-options='{"zoom":8}' data-gmap-lat="52.5075419" data-gmap-lng="13.4251364"></div>
 ```
 
 ```JavaScript
-$("#map").gmap();
+$('#map').gmap();
 ```
+
+## Options
+
+### centerOnResize
+
+Type: `boolean`  
+Default: `true`
+
+Recenter the map to the current center if map gets resized.
+
+### singleInfoWindow
+
+Type: `boolean`  
+Default: `true`
+
+Only open one `infoWindow` at most. Automatically closes opened `infoWindow` if you click on a marker to open a different.
 
 ## API
 
 jQuery.gmap offers several methods which are wrappers for common Google Map API functions.
 
-### setCenter
+### addMarker
 
-Sets the center of an initialized map. expects a LatLng string, which will be converted automatically.
+Add a marker to a previously initialized map. You can attach an `infoWindow` with some content,
+set the marker icon and add a title. The optional `infoWindow` can be toggle via click on the marker.
 
 ```JavaScript
-$("#map").gmap("setCenter", "53.5584898,9.7873965");
+$map.gmap('addMarker', {
+  lat: 52.5075419,
+  lng: 13.4251364,
+  title: 'I\'m a title!',
+  icon: '/path/to/icon.ext',
+  infoWindow: { // optional
+    content: 'Some content',
+    opened: true // whether it should be opened on init
+  }
+});
 ```
 
 ### setOptions
 
-Set options after initialization.
+Set options after initialization. Extends current options, does not replace.
 
 ```JavaScript
-$("#map").gmap("setOptions", {
-    scrollwheel: false,
-    draggable: true
+$('#map').gmap('setOptions', {
+  scrollwheel: false,
+  draggable: true
 });
-```
-
-### setZoom
-
-Set zoom value of your map.
-
-```JavaScript
-$("#map").gmap("setZoom", 6);
 ```
 
 ### getMap
@@ -124,8 +138,8 @@ $("#map").gmap("setZoom", 6);
 Not all features of Google Maps API v3 are covered by jquery.gmap. Therefore you can get the raw `Map` object and work with it as normal.
 
 ```JavaScript
-var $gmap = $("#map").gmap({
-    ...
+var $gmap = $('#map').gmap({
+  ...
 });
 
 var map = $gmap.getMap();
@@ -136,22 +150,3 @@ var id = map.getDiv();
 ### getMarker
 
 Get all initialized marker objects.
-
-### getPlaces
-
-Get all initialized places including the retrieved data.
-
-## Events
-
-All Google Map events are proxied by jQuery.gmap to access them easier the jQuery way. For reference check the [Google Maps documentation](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Map).
-
-```JavaScript
-var $gmap = $("#map").gmap({
-    ...
-});
-
-$gmap.on("tilesloaded.gmap", function() {
-    // tiles loaded!
-});
-
-```
