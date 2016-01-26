@@ -11,7 +11,7 @@ const banner = `/**
  * <%= pkg.name %> v<%= pkg.version %> - <%= pkg.description %>
  * Copyright ${new Date().getFullYear()} <%= pkg.author.name %> - <%= pkg.homepage %>
  * License: <%= pkg.license %>
- */`;
+ */\n`;
 
 gulp.task('build', ['lint'], () => {
   return gulp.src(`src/${pluginName}.js`)
