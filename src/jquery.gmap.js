@@ -2,7 +2,7 @@
  * jQuery Wrapper for Google Maps API v3.
  *
  * @author Lars Graubner <mail@larsgraubner.de>
- * @version 2.1.0
+ * @version 2.1.1
  * @license MIT
  */
 (function (factory) {
@@ -190,4 +190,4 @@
       zoom: 11,
     },
   };
-})();
+});
