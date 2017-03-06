@@ -5,7 +5,16 @@
  * @version 2.0.0
  * @license MIT
  */
-(function (window, document, $) {
+(function (factory) {
+  'use strict';
+  if (typeof define === 'function' && define.amd) {
+    define(['jquery'], factory);
+  } else if (typeof exports !== 'undefined') {
+    module.exports = factory(require('jquery'));
+  } else {
+    factory(jQuery);
+  }
+})(function ($) {
   'use strict';
 
   var pluginName = 'gmap';
@@ -181,4 +190,4 @@
       zoom: 11,
     },
   };
-})(window, document, jQuery);
+})();
